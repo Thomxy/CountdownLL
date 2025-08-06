@@ -20,7 +20,7 @@
         // Set the target date
         const targetDate = new Date('2026-01-31');
 
-        // Static list of Italian holidays (add more as needed)
+        // Static list of Italian holidays
         const italianHolidays = [
             '2025-01-01', // New Year's Day
             '2025-04-25', // Liberation Day
@@ -34,20 +34,14 @@
             '2026-01-01', // New Year's Day
         ].map(date => new Date(date));
 
-function resetTime(date) {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
-}
+        function resetTime(date) {
+            return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        }
 
-function isHoliday(date) {
-    const resetCurrentDate = resetTime(date);
-    return italianHolidays.some(holiday => {
-        const resetHolidayDate = resetTime(holiday);
-        console.log(`Comparing: ${resetCurrentDate.toLocaleDateString('it-IT')} with holiday: ${resetHolidayDate.toLocaleDateString('it-IT')}`);
-        return resetHolidayDate.getTime() === resetCurrentDate.getTime();
-    });
-}
-
-
+        function isHoliday(date) {
+            const resetCurrentDate = resetTime(date);
+            return italianHolidays.some(holiday => resetTime(holiday).getTime() === resetCurrentDate.getTime());
+        }
 
         function calculateBusinessDays(startDate, endDate) {
             let count = 0;
@@ -55,18 +49,12 @@ function isHoliday(date) {
 
             while (currentDate <= endDate) {
                 const dayOfWeek = currentDate.getDay();
-                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
-                const isHolidayDate = isHoliday(currentDate);
-
-                console.log(`Checking date: ${currentDate.toLocaleDateString('it-IT')}, Weekend: ${isWeekend}, Holiday: ${isHolidayDate}`);
-
-                if (!isWeekend && !isHolidayDate) {
+                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday(currentDate)) {
                     count++;
                 }
                 currentDate.setDate(currentDate.getDate() + 1);
             }
 
-            console.log(`Total business days: ${count}`);
             return count;
         }
 
@@ -80,5 +68,3 @@ function isHoliday(date) {
     </script>
 </body>
 </html>
-
-
