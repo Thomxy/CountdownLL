@@ -34,12 +34,19 @@
             '2026-01-01', // New Year's Day
         ].map(date => new Date(date));
 
-        function isHoliday(date) {
-            return italianHolidays.some(holiday => {
-                console.log(`Comparing: ${date.toLocaleDateString('it-IT')} with holiday: ${holiday.toLocaleDateString('it-IT')}`);
-                return holiday.getTime() === date.getTime();
-            });
-        }
+function resetTime(date) {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function isHoliday(date) {
+    const resetCurrentDate = resetTime(date);
+    return italianHolidays.some(holiday => {
+        const resetHolidayDate = resetTime(holiday);
+        console.log(`Comparing: ${resetCurrentDate.toLocaleDateString('it-IT')} with holiday: ${resetHolidayDate.toLocaleDateString('it-IT')}`);
+        return resetHolidayDate.getTime() === resetCurrentDate.getTime();
+    });
+}
+
 
 
         function calculateBusinessDays(startDate, endDate) {
@@ -73,4 +80,5 @@
     </script>
 </body>
 </html>
+
 
