@@ -24,23 +24,31 @@
         async function fetchItalianHolidays(year) {
             const apiKey = 'L999oHZb4ZSSgvoJStvdLuc2D9LryfKy'; // Replace with your Calendarific API key
             const url = `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=IT&year=${year}`;
-
+        
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                return data.response.holidays.map(holiday => new Date(holiday.date.iso));
+        
+                if (data.response && data.response.holidays) {
+                    console.log(`Holidays for ${year}:`, data.response.holidays);
+                    return data.response.holidays.map(holiday => new Date(holiday.date.iso));
+                } else {
+                    console.error('No holidays found in response:', data);
+                    return [];
+                }
             } catch (error) {
                 console.error('Error fetching holidays:', error);
                 return [];
             }
         }
-
+        
         async function fetchHolidaysForRange(startYear, endYear) {
             let holidays = [];
             for (let year = startYear; year <= endYear; year++) {
                 const yearlyHolidays = await fetchItalianHolidays(year);
                 holidays = holidays.concat(yearlyHolidays);
             }
+            console.log('All holidays:', holidays);
             return holidays;
         }
 
@@ -76,6 +84,7 @@
     </script>
 </body>
 </html>
+
 
 
 
