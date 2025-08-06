@@ -20,9 +20,9 @@
         // Set the target date
         const targetDate = new Date('2026-01-31');
 
-        // Function to fetch Italian holidays from Calendarific API
+        // Function to fetch Italian holidays from Calendarific API for a given year
         async function fetchItalianHolidays(year) {
-            const apiKey = 'L999oHZb4ZSSgvoJStvdLuc2D9LryfKy'; // Replace with your Calendarific API key
+            const apiKey = 'YOUR_API_KEY'; // Replace with your Calendarific API key
             const url = `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=IT&year=${year}`;
 
             try {
@@ -33,6 +33,15 @@
                 console.error('Error fetching holidays:', error);
                 return [];
             }
+        }
+
+        async function fetchHolidaysForRange(startYear, endYear) {
+            let holidays = [];
+            for (let year = startYear; year <= endYear; year++) {
+                const yearlyHolidays = await fetchItalianHolidays(year);
+                holidays = holidays.concat(yearlyHolidays);
+            }
+            return holidays;
         }
 
         function isHoliday(date, holidays) {
@@ -56,8 +65,9 @@
 
         async function updateCountdown() {
             const today = new Date();
-            const year = today.getFullYear();
-            const holidays = await fetchItalianHolidays(year);
+            const startYear = today.getFullYear();
+            const endYear = targetDate.getFullYear();
+            const holidays = await fetchHolidaysForRange(startYear, endYear);
             const businessDays = calculateBusinessDays(today, targetDate, holidays);
             document.getElementById('countdown').textContent = `Business days until ${targetDate.toLocaleDateString('it-IT')}: ${businessDays}`;
         }
