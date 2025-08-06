@@ -35,8 +35,12 @@
         ].map(date => new Date(date));
 
         function isHoliday(date) {
-            return italianHolidays.some(holiday => holiday.getTime() === date.getTime());
+            return italianHolidays.some(holiday => {
+                console.log(`Comparing: ${date.toLocaleDateString('it-IT')} with holiday: ${holiday.toLocaleDateString('it-IT')}`);
+                return holiday.getTime() === date.getTime();
+            });
         }
+
 
         function calculateBusinessDays(startDate, endDate) {
             let count = 0;
@@ -69,3 +73,4 @@
     </script>
 </body>
 </html>
+
