@@ -18,51 +18,50 @@
 
     <script>
         // Set the target date
-        const targetDate = new Date('2026-01-31');
+        const targetDate = new Date('2027-12-31');
 
-        // Function to fetch Italian holidays from Calendarific API for a given year
-        async function fetchItalianHolidays(year) {
-            const apiKey = 'L999oHZb4ZSSgvoJStvdLuc2D9LryfKy'; // Replace with your Calendarific API key
-            const url = `https://calendarific.com/api/v2/holidays?&api_key=${apiKey}&country=IT&year=${year}`;
-        
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-        
-                if (data.response && data.response.holidays) {
-                    console.log(`Holidays for ${year}:`, data.response.holidays);
-                    return data.response.holidays.map(holiday => new Date(holiday.date.iso));
-                } else {
-                    console.error('No holidays found in response:', data);
-                    return [];
-                }
-            } catch (error) {
-                console.error('Error fetching holidays:', error);
-                return [];
-            }
-        }
-        
-        async function fetchHolidaysForRange(startYear, endYear) {
-            let holidays = [];
-            for (let year = startYear; year <= endYear; year++) {
-                const yearlyHolidays = await fetchItalianHolidays(year);
-                holidays = holidays.concat(yearlyHolidays);
-            }
-            console.log('All holidays:', holidays);
-            return holidays;
+        // Static list of Italian holidays (add more as needed)
+        const italianHolidays = [
+            '2025-01-01', // New Year's Day
+            '2025-04-25', // Liberation Day
+            '2025-05-01', // Labour Day
+            '2025-06-02', // Republic Day
+            '2025-08-15', // Assumption of Mary
+            '2025-11-01', // All Saints' Day
+            '2025-12-08', // Immaculate Conception
+            '2025-12-25', // Christmas Day
+            '2025-12-26', // St. Stephen's Day
+            '2026-01-01', // New Year's Day
+            '2026-04-25', // Liberation Day
+            '2026-05-01', // Labour Day
+            '2026-06-02', // Republic Day
+            '2026-08-15', // Assumption of Mary
+            '2026-11-01', // All Saints' Day
+            '2026-12-08', // Immaculate Conception
+            '2026-12-25', // Christmas Day
+            '2026-12-26', // St. Stephen's Day
+            '2027-01-01', // New Year's Day
+            '2027-04-25', // Liberation Day
+            '2027-05-01', // Labour Day
+            '2027-06-02', // Republic Day
+            '2027-08-15', // Assumption of Mary
+            '2027-11-01', // All Saints' Day
+            '2027-12-08', // Immaculate Conception
+            '2027-12-25', // Christmas Day
+            '2027-12-26', // St. Stephen's Day
+        ].map(date => new Date(date));
+
+        function isHoliday(date) {
+            return italianHolidays.some(holiday => holiday.getTime() === date.getTime());
         }
 
-        function isHoliday(date, holidays) {
-            return holidays.some(holiday => holiday.getTime() === date.getTime());
-        }
-
-        function calculateBusinessDays(startDate, endDate, holidays) {
+        function calculateBusinessDays(startDate, endDate) {
             let count = 0;
             let currentDate = new Date(startDate);
 
             while (currentDate <= endDate) {
                 const dayOfWeek = currentDate.getDay();
-                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday(currentDate, holidays)) {
+                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday(currentDate)) {
                     count++;
                 }
                 currentDate.setDate(currentDate.getDate() + 1);
@@ -71,12 +70,9 @@
             return count;
         }
 
-        async function updateCountdown() {
+        function updateCountdown() {
             const today = new Date();
-            const startYear = today.getFullYear();
-            const endYear = targetDate.getFullYear();
-            const holidays = await fetchHolidaysForRange(startYear, endYear);
-            const businessDays = calculateBusinessDays(today, targetDate, holidays);
+            const businessDays = calculateBusinessDays(today, targetDate);
             document.getElementById('countdown').textContent = `Business days until ${targetDate.toLocaleDateString('it-IT')}: ${businessDays}`;
         }
 
@@ -84,7 +80,3 @@
     </script>
 </body>
 </html>
-
-
-
-
