@@ -32,23 +32,6 @@
             '2025-12-25', // Christmas Day
             '2025-12-26', // St. Stephen's Day
             '2026-01-01', // New Year's Day
-            '2026-04-25', // Liberation Day
-            '2026-05-01', // Labour Day
-            '2026-06-02', // Republic Day
-            '2026-08-15', // Assumption of Mary
-            '2026-11-01', // All Saints' Day
-            '2026-12-08', // Immaculate Conception
-            '2026-12-25', // Christmas Day
-            '2026-12-26', // St. Stephen's Day
-            '2027-01-01', // New Year's Day
-            '2027-04-25', // Liberation Day
-            '2027-05-01', // Labour Day
-            '2027-06-02', // Republic Day
-            '2027-08-15', // Assumption of Mary
-            '2027-11-01', // All Saints' Day
-            '2027-12-08', // Immaculate Conception
-            '2027-12-25', // Christmas Day
-            '2027-12-26', // St. Stephen's Day
         ].map(date => new Date(date));
 
         function isHoliday(date) {
@@ -61,12 +44,18 @@
 
             while (currentDate <= endDate) {
                 const dayOfWeek = currentDate.getDay();
-                if (dayOfWeek !== 0 && dayOfWeek !== 6 && !isHoliday(currentDate)) {
+                const isWeekend = (dayOfWeek === 0 || dayOfWeek === 6);
+                const isHolidayDate = isHoliday(currentDate);
+
+                console.log(`Checking date: ${currentDate.toLocaleDateString('it-IT')}, Weekend: ${isWeekend}, Holiday: ${isHolidayDate}`);
+
+                if (!isWeekend && !isHolidayDate) {
                     count++;
                 }
                 currentDate.setDate(currentDate.getDate() + 1);
             }
 
+            console.log(`Total business days: ${count}`);
             return count;
         }
 
@@ -80,4 +69,3 @@
     </script>
 </body>
 </html>
-
